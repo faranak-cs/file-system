@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: filesystem
+  datasource:
+    url: jdbc:h2:mem:file_system
+    driverClassName: org.h2.Driver
+    username: admin
+    password: secret
+  h2:
+    console:
+      enabled: true
+      settings:
+        web-allow-others: true
