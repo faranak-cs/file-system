@@ -13,11 +13,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Builder
-@Data
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+@Setter
+@Getter
 @Entity
 @Table(name = "folder")
 public class FolderEntity {
@@ -29,23 +32,21 @@ public class FolderEntity {
   @Column(name = "folder_name", nullable = false)
   private String folderName;
 
-  @Column(name = "type")
-  private String type;
-
-  @Column(name = "path")
-  private String path;
-
-  @ManyToOne(optional = false, fetch = FetchType.LAZY)
+  @JsonBackReference
+  @ManyToOne(optional = false)
   @JoinColumn(name = "drive_id", nullable = false)
   private DriveEntity drive;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "parent_id")
+  @JsonManagedReference
+  @OneToMany(mappedBy = "folder", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<FileEntity> files;
+
+  @JsonBackReference
+  @ManyToOne
+  @JoinColumn(name = "parent_folder")
   private FolderEntity parentFolder;
 
-  @OneToMany(mappedBy = "parentFolder", cascade = CascadeType.ALL, orphanRemoval = true)
+  @JsonManagedReference
+  @OneToMany(mappedBy = "parentFolder")
   private List<FolderEntity> subFolders;
-
-  @OneToMany(mappedBy = "parentFolder", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<FileEntity> files;
 }

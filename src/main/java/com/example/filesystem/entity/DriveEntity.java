@@ -11,11 +11,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Builder
-@Data
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+@Setter
+@Getter
 @Entity
 @Table(name = "drive")
 public class DriveEntity {
@@ -24,18 +26,14 @@ public class DriveEntity {
   @Column(name = "id")
   private Integer id;
 
-  @Column(name = "drive_name")
+  @Column(name = "drive_name", nullable = false, unique = true)
   private String driveName;
 
-  @Column(name = "type")
-  private String type;
-
-  @Column(name = "path")
-  private String path;
-
-  @OneToMany(mappedBy = "drive", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JsonManagedReference
+  @OneToMany(mappedBy = "drive", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
   private List<FileEntity> files;
 
-  @OneToMany(mappedBy = "drive", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JsonManagedReference
+  @OneToMany(mappedBy = "drive", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
   private List<FolderEntity> folders;
 }
