@@ -23,7 +23,7 @@ public class FileEntity {
   @Column(name = "id")
   private Integer id;
 
-  @Column(name = "file_name", nullable = false)
+  @Column(name = "file_name", nullable = false, unique = true)
   private String fileName;
 
   @Column(name = "content")
@@ -35,7 +35,7 @@ public class FileEntity {
   private DriveEntity drive;
 
   @JsonBackReference
-  @ManyToOne
-  @JoinColumn(name = "folder_id")
+  @ManyToOne(optional = true)
+  @JoinColumn(name = "folder_id", nullable = true)
   private FolderEntity folder;
 }

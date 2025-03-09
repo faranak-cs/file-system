@@ -29,24 +29,24 @@ public class FolderEntity {
   @Column(name = "id")
   private Integer id;
 
-  @Column(name = "folder_name", nullable = false)
+  @Column(name = "folder_name", nullable = false, unique = true)
   private String folderName;
+
+  @JsonManagedReference
+  @OneToMany(mappedBy = "folder", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<FileEntity> files;
+
+  @JsonManagedReference
+  @OneToMany(mappedBy = "parentFolder", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<FolderEntity> subFolders;
 
   @JsonBackReference
   @ManyToOne(optional = false)
   @JoinColumn(name = "drive_id", nullable = false)
   private DriveEntity drive;
 
-  @JsonManagedReference
-  @OneToMany(mappedBy = "folder", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<FileEntity> files;
-
   @JsonBackReference
   @ManyToOne
   @JoinColumn(name = "parent_folder")
   private FolderEntity parentFolder;
-
-  @JsonManagedReference
-  @OneToMany(mappedBy = "parentFolder")
-  private List<FolderEntity> subFolders;
 }

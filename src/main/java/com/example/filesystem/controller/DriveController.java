@@ -1,6 +1,7 @@
 package com.example.filesystem.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,32 +24,50 @@ import com.example.filesystem.repository.DriveRepository;
 @RequestMapping("/api/v1/drives")
 @RestController
 public class DriveController {
+
   private final DriveRepository repository;
 
   @GetMapping
-  @Operation(description = "Get all drives in a file system")
+  @Operation(summary = "Get all drives with associated files/folders in a file system",
+      description = "Get all drives with associated files/folders in a file system")
   public ResponseEntity<List<DriveEntity>> getDrives() {
-    return ResponseEntity
-        .status(200)
-        .body(repository.findAll());
+    return ResponseEntity.ok(repository.findAll());
   }
 
   @PostMapping
-  @Operation(description = "Create a new drive in a file system")
-  public ResponseEntity<DriveEntity> createDrive(@RequestParam String driveName) {
+  @Operation(summary = "Create a new drive in a file system",
+      description = "Create a new drive in a file system. Drive name must be unique.")
+  public ResponseEntity<String> createDrive(@RequestParam String driveName) {
+    if (driveName == null || driveName.isBlank()) {
+      return ResponseEntity
+          .badRequest()
+          .body("Drive name cannot be null, empty or blank.");
+    }
+    if (repository
+        .findByDriveName(driveName)
+        .isPresent()) {
+      return ResponseEntity
+          .badRequest()
+          .body("Drive name already exists.");
+    }
     DriveEntity drive = new DriveEntity();
     drive.setDriveName(driveName);
-    return ResponseEntity
-        .status(200)
-        .body(repository.save(drive));
+    DriveEntity saved = repository.save(drive);
+    return ResponseEntity.ok("Drive is created. ID: " + saved.getId());
   }
 
   @DeleteMapping("/{id}")
-  @Operation(description = "Delete a drive in a file system")
+  @Operation(summary = "Delete a drive in a file system",
+      description = "Delete a drive with associated files/folders in a file system using an id")
   public ResponseEntity<String> deleteDrive(@PathVariable Integer id) {
+    Optional<DriveEntity> drive = repository.findById(id);
+    if (drive.isEmpty()) {
+      return ResponseEntity
+          .badRequest()
+          .body("No drive exists with provided id.");
+    }
     repository.deleteById(id);
     return ResponseEntity
-        .status(204)
-        .body("Drive is deleted");
+        .ok("Drive is deleted. ID: " + id);
   }
 }
