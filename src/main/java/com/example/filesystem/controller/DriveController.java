@@ -4,7 +4,6 @@ import com.example.filesystem.entity.DriveEntity;
 import com.example.filesystem.repository.DriveRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,12 +11,15 @@ import java.util.List;
 import java.util.Optional;
 
 @Tag(name = "Drive Controller", description = "REST API to create or delete a drive in a file system")
-@RequiredArgsConstructor
 @RequestMapping("/api/v1/drives")
 @RestController
 public class DriveController {
 
     private final DriveRepository driveRepository;
+
+    public DriveController(DriveRepository driveRepository) {
+        this.driveRepository = driveRepository;
+    }
 
     @GetMapping
     @Operation(summary = "Get all drives with associated files/folders in a file system",

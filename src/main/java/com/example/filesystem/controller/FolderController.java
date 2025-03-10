@@ -6,7 +6,7 @@ import com.example.filesystem.repository.DriveRepository;
 import com.example.filesystem.repository.FolderRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,13 +14,19 @@ import java.util.List;
 import java.util.Optional;
 
 @Tag(name = "Folder Controller", description = "REST API to create, delete or move a folder in a file system")
-@RequiredArgsConstructor
 @RequestMapping("/api/v1/folders")
 @RestController
 public class FolderController {
     private final FolderRepository folderRepository;
 
     private final DriveRepository driveRepository;
+
+    @Autowired
+    public FolderController(FolderRepository folderRepository,
+                            DriveRepository driveRepository) {
+        this.folderRepository = folderRepository;
+        this.driveRepository = driveRepository;
+    }
 
     @GetMapping
     @Operation(summary = "Get all folders with associated files/folders in a file system",

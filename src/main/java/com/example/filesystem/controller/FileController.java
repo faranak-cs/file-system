@@ -7,7 +7,6 @@ import com.example.filesystem.repository.FileRepository;
 import com.example.filesystem.repository.FolderRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +14,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Tag(name = "File Controller", description = "REST API to create, delete, move or write in a file in a file system")
-@RequiredArgsConstructor
 @RequestMapping("/api/v1/files")
 @RestController
 public class FileController {
@@ -24,6 +22,14 @@ public class FileController {
     private final FolderRepository folderRepository;
 
     private final DriveRepository driveRepository;
+
+    public FileController(FileRepository fileRepository,
+                          FolderRepository folderRepository,
+                          DriveRepository driveRepository) {
+        this.fileRepository = fileRepository;
+        this.folderRepository = folderRepository;
+        this.driveRepository = driveRepository;
+    }
 
     @GetMapping
     @Operation(summary = "Get all files in a file system",
