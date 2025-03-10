@@ -23,13 +23,13 @@ public class FolderEntity {
     private DriveEntity drive;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "folder", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "folder", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FileEntity> files;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "parentFolder", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "parentFolder", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FolderEntity> subFolders;
-    
+
     @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "parent_folder")

@@ -17,11 +17,11 @@ public class DriveEntity {
     private String driveName;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "drive", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "drive", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FileEntity> files;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "drive", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "drive", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FolderEntity> folders;
 
     public DriveEntity() {
